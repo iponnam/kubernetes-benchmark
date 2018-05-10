@@ -46,8 +46,15 @@ fi
 check_2_1_6="2.1.6  - Ensure that the --streaming-connection-idle-timeout argument is not set to 0"
 if check_argument "$CIS_KUBELET_CMD" '--streaming-connection-idle-timeout=0' >/dev/null 2>&1; then
     timeout=$(get_argument_value "$CIS_KUBELET_CMD" '--streaming-connection-idle-timeout')
-    warn "$check_2_1_6"
-    warn "       * streaming-connection-idle-timeout: $timeout"
+	if [ $timeout = "0" ]; then
+	    warn "$check_2_1_6"
+     	    warn "       * streaming-connection-idle-timeout: $timeout"
+	fi
+	if [ $timeout != "0" ]; then
+            pass "$check_2_1_6"
+            pass "       * streaming-connection-idle-timeout: $timeout"
+	fi
+
 else
     pass "$check_2_1_6"
 fi
