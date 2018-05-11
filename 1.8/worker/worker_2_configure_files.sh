@@ -103,7 +103,8 @@ fi
 check_2_2_7="2.2.7  - Ensure that the certificate authorities file permissions are set to 644 or more restrictive"
 if check_argument "$CIS_KUBELET_CMD" '--client-ca-file' >/dev/null 2>&1; then
   file=$(get_argument_value "$CIS_KUBELET_CMD" '--client-ca-file')
-  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
+#  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
+  if [ "$(stat -c %a $file)" -le 644 ]; then
     pass "$check_2_2_7"
     pass "       * client-ca-file: $file"
   else
