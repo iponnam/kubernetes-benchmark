@@ -10,7 +10,7 @@ else
     file="/etc/kubernetes/manifests/kube-apiserver.yaml"
 fi
 if [ -f $file ]; then
-  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 640 -o "$(stat -c %a $file)" -eq 600 ]; then
+  if [ "$(stat -c %a $file)" -le 644 -o "$(stat -c %a $file)" -eq 640 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_1_4_1"
   else
     warn "$check_1_4_1"
@@ -137,7 +137,7 @@ else
     file="/etc/kubernetes/manifests/etcd.yaml"
 fi
 if [ -f $file ]; then
-  if [ "$(stat -L -c %a $file)" -eq 644 -o "$(stat -L -c %a $file)" -eq 640 -o "$(stat -L -c %a $file)" -eq 600 ]; then
+  if [ "$(stat -L -c %a $file)" -le 644 -o "$(stat -L -c %a $file)" -eq 640 -o "$(stat -L -c %a $file)" -eq 600 ]; then
     pass "$check_1_4_7"
   else
     warn "$check_1_4_7"
@@ -173,9 +173,9 @@ fi
 check_1_4_9="1.4.9  - Ensure that the Container Network Interface file permissions are set to 644 or more restrictive"
 check_1_4_10="1.4.10  - Ensure that the Container Network Interface file ownership is set to root:root"
 check_1_4_11="1.4.11  - Ensure that the etcd data directory permissions are set to 700 or more restrictive"
-directory=$(get_argument_value "$CIS_ETCD_CMD" '--data-dir')
+directory='/var/lib/etcd/'
 if [ -d "$directory" ]; then
-  if [ "$(stat -c %a $directory)" -eq 700 ]; then
+  if [ "$(stat -c %a $directory)" -le 700 ]; then
     pass "$check_1_4_11"
   else
     warn "$check_1_4_11"
@@ -188,7 +188,7 @@ else
 fi
 
 check_1_4_12="1.4.12  - Ensure that the etcd data directory ownership is set to etcd:etcd"
-directory=$(get_argument_value "$CIS_ETCD_CMD" '--data-dir')
+directory='/var/lib/etcd/'
 if [ -d "$directory" ]; then
   if [ "$(stat -c %U:%G $directory)" = "etcd:etcd" ]; then
     pass "$check_1_4_12"
